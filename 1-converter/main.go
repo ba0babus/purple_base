@@ -68,11 +68,11 @@ toCurrencyLoop:
 
 func calculateCurrency(fromCurrency string, amount float64, toCurrency string) {
 	const eurToUsd = 1.17
-	const eurToRub = 94.89
 	const rubToEur = 0.011
 	const rubToUsd = 0.012
 	const usdToEur = 0.85
 	const usdToRub = 81.15
+	const eurToRub = usdToRub / usdToEur
 	var result float64
 
 	if fromCurrency == "USD" && toCurrency == "RUB" {
