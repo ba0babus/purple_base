@@ -8,29 +8,30 @@ func main() {
 	calculateCurrency(getUserInput())
 }
 
-func getUserInput() (string, float64, string) {
-	var fromCurrency, toCurrency string
-	var amount float64
-fromCurrencyLoop:
+func getCurrency(currencyType string, currencyMap map[string]string) string {
+	currency := ""
 	for { // выбираем исходную валюту
-		fmt.Printf("Choose the currency number from convert (e.g.: 2): \n")
+		fmt.Printf("Choose the currency number %v convert (e.g.: 2): \n", currencyType)
 		fmt.Printf("USD = 1\nEUR = 2\nRUB = 3\n")
-		fmt.Scan(&fromCurrency)
-		switch fromCurrency {
-		case "1":
-			fromCurrency = "USD"
-			break fromCurrencyLoop
-		case "2":
-			fromCurrency = "EUR"
-			break fromCurrencyLoop
-		case "3":
-			fromCurrency = "RUB"
-			break fromCurrencyLoop
-		default:
+		fmt.Scan(&currency)
+		_, exists := currencyMap[currency]
+		if exists {
+			return currency
+		} else {
 			fmt.Printf("Please, type a number from 1 to 3. Try again...\n\n\n")
-			continue fromCurrencyLoop
 		}
 	}
+}
+
+func getUserInput() (string, float64, string) {
+	var amount float64
+	currencyMap := map[string]string{
+		"1": "USD",
+		"2": "EUR",
+		"3": "RUB",
+	}
+
+	fromCurrency := currencyMap[getCurrency("from", currencyMap)]
 
 amountLoop:
 	for { // выбираем количество
@@ -43,56 +44,40 @@ amountLoop:
 			break amountLoop
 		}
 	}
-toCurrencyLoop:
-	for { // выбираем исходную валюту
-		fmt.Printf("Choose the currency number to convert (e.g.: 2): \n")
-		fmt.Printf("USD = 1\nEUR = 2\nRUB = 3\n")
-		fmt.Scan(&toCurrency)
-		switch toCurrency {
-		case "1":
-			toCurrency = "USD"
-			break toCurrencyLoop
-		case "2":
-			toCurrency = "EUR"
-			break toCurrencyLoop
-		case "3":
-			toCurrency = "RUB"
-			break toCurrencyLoop
-		default:
-			fmt.Printf("Please, type a number from 1 to 3. Try again...\n\n\n")
-			continue toCurrencyLoop
-		}
-	}
+
+	toCurrency := currencyMap[getCurrency("to", currencyMap)]
+
 	return fromCurrency, amount, toCurrency
 }
 
 func calculateCurrency(fromCurrency string, amount float64, toCurrency string) {
-	const eurToUsd = 1.17
-	const rubToEur = 0.011
-	const rubToUsd = 0.012
-	const usdToEur = 0.85
-	const usdToRub = 81.15
-	const eurToRub = usdToRub / usdToEur
+	// Создаем map с курсами валют
+	rates := map[string]float64{
+		"USD_RUB": 81.15,
+		"USD_EUR": 0.85,
+		"RUB_USD": 0.012,
+		"RUB_EUR": 0.011,
+		"EUR_RUB": 92.12,
+		"EUR_USD": 1.17,
+	}
+
 	var result float64
 
-	if fromCurrency == "USD" && toCurrency == "RUB" {
-		result = amount * usdToRub
-	} else if fromCurrency == "USD" && toCurrency == "EUR" {
-		result = amount * usdToEur
-	} else if fromCurrency == "RUB" && toCurrency == "USD" {
-		result = amount * rubToUsd
-	} else if fromCurrency == "RUB" && toCurrency == "EUR" {
-		result = amount * rubToEur
-	} else if fromCurrency == "EUR" && toCurrency == "RUB" {
-		result = amount * eurToRub
-	} else if fromCurrency == "EUR" && toCurrency == "USD" {
-		result = amount * eurToUsd
-	} else if fromCurrency == toCurrency {
+	// Если валюты одинаковые
+	if fromCurrency == toCurrency {
 		result = amount
-	} else {
-		fmt.Println("Invalid currency pair")
+		fmt.Printf("Total: %0.2f\n", result)
 		return
 	}
 
-	fmt.Printf("Total: %0.2f\n", result)
+	// Формируем ключ для поиска в map
+	key := fromCurrency + "_" + toCurrency
+
+	// Ищем курс в map
+	if rate, exists := rates[key]; exists {
+		result = amount * rate
+		fmt.Printf("Total: %0.2f\n", result)
+	} else {
+		fmt.Println("Invalid currency pair")
+	}
 }
