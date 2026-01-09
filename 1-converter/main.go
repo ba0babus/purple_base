@@ -8,13 +8,13 @@ func main() {
 	calculateCurrency(getUserInput())
 }
 
-func getCurrency(currencyType string, currencyMap map[string]string) string {
+func getCurrency(currencyType string, currencyMap *map[string]string) string {
 	currency := ""
 	for { // выбираем исходную валюту
 		fmt.Printf("Choose the currency number %v convert (e.g.: 2): \n", currencyType)
 		fmt.Printf("USD = 1\nEUR = 2\nRUB = 3\n")
 		fmt.Scan(&currency)
-		_, exists := currencyMap[currency]
+		_, exists := (*currencyMap)[currency]
 		if exists {
 			return currency
 		} else {
@@ -31,7 +31,7 @@ func getUserInput() (string, float64, string) {
 		"3": "RUB",
 	}
 
-	fromCurrency := currencyMap[getCurrency("from", currencyMap)]
+	fromCurrency := currencyMap[getCurrency("from", &currencyMap)]
 
 amountLoop:
 	for { // выбираем количество
@@ -45,7 +45,7 @@ amountLoop:
 		}
 	}
 
-	toCurrency := currencyMap[getCurrency("to", currencyMap)]
+	toCurrency := currencyMap[getCurrency("to", &currencyMap)]
 
 	return fromCurrency, amount, toCurrency
 }
