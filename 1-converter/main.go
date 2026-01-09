@@ -5,7 +5,16 @@ import (
 )
 
 func main() {
-	calculateCurrency(getUserInput())
+	rates := map[string]float64{
+		"USD_RUB": 81.15,
+		"USD_EUR": 0.85,
+		"RUB_USD": 0.012,
+		"RUB_EUR": 0.011,
+		"EUR_RUB": 92.12,
+		"EUR_USD": 1.17,
+	}
+	fromCurrency, amount, toCurrency := getUserInput()
+	calculateCurrency(fromCurrency, amount, toCurrency, &rates)
 }
 
 func getCurrency(currencyType string, currencyMap *map[string]string) string {
@@ -50,16 +59,7 @@ amountLoop:
 	return fromCurrency, amount, toCurrency
 }
 
-func calculateCurrency(fromCurrency string, amount float64, toCurrency string) {
-	// Создаем map с курсами валют
-	rates := map[string]float64{
-		"USD_RUB": 81.15,
-		"USD_EUR": 0.85,
-		"RUB_USD": 0.012,
-		"RUB_EUR": 0.011,
-		"EUR_RUB": 92.12,
-		"EUR_USD": 1.17,
-	}
+func calculateCurrency(fromCurrency string, amount float64, toCurrency string, rates *map[string]float64) {
 
 	var result float64
 
@@ -74,7 +74,7 @@ func calculateCurrency(fromCurrency string, amount float64, toCurrency string) {
 	key := fromCurrency + "_" + toCurrency
 
 	// Ищем курс в map
-	if rate, exists := rates[key]; exists {
+	if rate, exists := (*rates)[key]; exists {
 		result = amount * rate
 		fmt.Printf("Total: %0.2f\n", result)
 	} else {
