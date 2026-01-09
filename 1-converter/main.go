@@ -5,16 +5,25 @@ import (
 )
 
 func main() {
-	calculateCurrency(getUserInput())
+	rates := map[string]float64{
+		"USD_RUB": 81.15,
+		"USD_EUR": 0.85,
+		"RUB_USD": 0.012,
+		"RUB_EUR": 0.011,
+		"EUR_RUB": 92.12,
+		"EUR_USD": 1.17,
+	}
+	fromCurrency, amount, toCurrency := getUserInput()
+	calculateCurrency(fromCurrency, amount, toCurrency, &rates)
 }
 
-func getCurrency(currencyType string, currencyMap map[string]string) string {
+func getCurrency(currencyType string, currencyMap *map[string]string) string {
 	currency := ""
 	for { // выбираем исходную валюту
 		fmt.Printf("Choose the currency number %v convert (e.g.: 2): \n", currencyType)
 		fmt.Printf("USD = 1\nEUR = 2\nRUB = 3\n")
 		fmt.Scan(&currency)
-		_, exists := currencyMap[currency]
+		_, exists := (*currencyMap)[currency]
 		if exists {
 			return currency
 		} else {
@@ -31,7 +40,7 @@ func getUserInput() (string, float64, string) {
 		"3": "RUB",
 	}
 
-	fromCurrency := currencyMap[getCurrency("from", currencyMap)]
+	fromCurrency := currencyMap[getCurrency("from", &currencyMap)]
 
 amountLoop:
 	for { // выбираем количество
@@ -45,21 +54,12 @@ amountLoop:
 		}
 	}
 
-	toCurrency := currencyMap[getCurrency("to", currencyMap)]
+	toCurrency := currencyMap[getCurrency("to", &currencyMap)]
 
 	return fromCurrency, amount, toCurrency
 }
 
-func calculateCurrency(fromCurrency string, amount float64, toCurrency string) {
-	// Создаем map с курсами валют
-	rates := map[string]float64{
-		"USD_RUB": 81.15,
-		"USD_EUR": 0.85,
-		"RUB_USD": 0.012,
-		"RUB_EUR": 0.011,
-		"EUR_RUB": 92.12,
-		"EUR_USD": 1.17,
-	}
+func calculateCurrency(fromCurrency string, amount float64, toCurrency string, rates *map[string]float64) {
 
 	var result float64
 
@@ -74,7 +74,7 @@ func calculateCurrency(fromCurrency string, amount float64, toCurrency string) {
 	key := fromCurrency + "_" + toCurrency
 
 	// Ищем курс в map
-	if rate, exists := rates[key]; exists {
+	if rate, exists := (*rates)[key]; exists {
 		result = amount * rate
 		fmt.Printf("Total: %0.2f\n", result)
 	} else {
