@@ -24,7 +24,7 @@ func newBin(id string, private bool, name string) *bin {
 }
 
 func main() {
-	var BinList []struct{}
+	var BinList []bin
 	someBin := newBin("123", true, "myNewBin")
 	fmt.Println(BinList, someBin)
 }
