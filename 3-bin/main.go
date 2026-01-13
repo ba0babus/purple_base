@@ -3,15 +3,16 @@ package main
 import (
 	"fmt"
 	"purple_base/bin/bins"
+	"purple_base/bin/storage"
 )
 
 func main() {
 	filename := "bin_list.json"
 	someBin := bins.NewBin("123", true, "myNewBin")
 
-	someBin.SaveBin(filename)
+	storage.SaveBin(someBin, filename)
 
-	myBin, err := someBin.ReadBin(filename)
+	myBin, err := storage.ReadBin(filename)
 	if err != nil {
 		fmt.Println(err)
 	} else {
