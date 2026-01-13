@@ -6,6 +6,15 @@ import (
 )
 
 func main() {
+	filename := "bin_list.json"
 	someBin := bins.NewBin("123", true, "myNewBin")
-	fmt.Println(someBin)
+
+	someBin.SaveBin(filename)
+
+	myBin, err := someBin.ReadBin(filename)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(myBin)
+	}
 }
