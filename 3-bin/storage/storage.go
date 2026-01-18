@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"purple_base/bin/bins"
 	"purple_base/bin/file"
 )
 
-func Write(content *bins.Bin, filename string) (bool, error) {
+func Write(content []byte) (bool, error) {
+	filename := "bin_list.json"
 	var isSaved bool
 	data, _ := json.Marshal(content)
 	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
@@ -28,7 +28,8 @@ func Write(content *bins.Bin, filename string) (bool, error) {
 	return isSaved, nil
 }
 
-func Read(filename string) ([]byte, error) {
+func Read() ([]byte, error) {
+	filename := "bin_list.json"
 	content, err := file.Read(filename)
 	if err != nil {
 		return nil, errors.New("UNABLE_TO_READ_BIN")
