@@ -7,28 +7,37 @@ import (
 	"strings"
 )
 
+var menu = map[string]func(){
+	"1": getAVG,
+	"2": getSUM,
+	"3": getMED,
+}
+
+var menuVariants = []string{
+	"1. Найти средрее",
+	"2. Найти сумму",
+	"3. Найти медиану",
+	"4. Выход",
+	"Выберите вариант:",
+}
+
 func main() {
 	getUserOperation()
 }
 
 func getUserOperation() {
-	var operation int
-fromCurrencyLoop:
+	var operation string
+Menu:
 	for {
-		fmt.Printf("Choose an operation: \n")
-		fmt.Printf("AVG = 1, SUM = 2, MED = 3: ")
-		fmt.Scan(&operation)
-		switch operation {
-		case 1:
-			getAVG()
-		case 2:
-			getSUM()
-		case 3:
-			getMED()
-		default:
-			fmt.Printf("Please, type a number from 1 to 3. Try again...\n\n\n")
-			continue fromCurrencyLoop
+		for i := range menuVariants {
+			fmt.Println(menuVariants[i])
 		}
+		fmt.Scan(&operation)
+		mathFuntion := menu[operation]
+		if mathFuntion == nil {
+			break Menu
+		}
+		mathFuntion()
 	}
 }
 
