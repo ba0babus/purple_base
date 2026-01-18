@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-func ReadFile(filename string) ([]byte, error) {
+func Read(filename string) ([]byte, error) {
 	if filepath.Ext(filename) != ".json" {
 		return nil, errors.New("FILE_EXTENSION_IS_NOT_JSON")
 	}

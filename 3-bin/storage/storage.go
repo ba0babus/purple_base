@@ -9,7 +9,7 @@ import (
 	"purple_base/bin/file"
 )
 
-func SaveBin(content *bins.Bin, filename string) (bool, error) {
+func Write(content *bins.Bin, filename string) (bool, error) {
 	var isSaved bool
 	data, _ := json.Marshal(content)
 	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
@@ -28,10 +28,10 @@ func SaveBin(content *bins.Bin, filename string) (bool, error) {
 	return isSaved, nil
 }
 
-func ReadBin(filename string) (string, error) {
-	content, err := file.ReadFile(filename)
+func Read(filename string) ([]byte, error) {
+	content, err := file.Read(filename)
 	if err != nil {
-		return "", errors.New("UNABLE_TO_READ_BIN")
+		return nil, errors.New("UNABLE_TO_READ_BIN")
 	}
-	return string(content), nil
+	return content, nil
 }

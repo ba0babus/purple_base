@@ -10,12 +10,12 @@ func main() {
 	filename := "bin_list.json"
 	someBin := bins.NewBin("123", true, "myNewBin")
 
-	storage.SaveBin(someBin, filename)
+	storage.Write(someBin, filename)
 
-	myBin, err := storage.ReadBin(filename)
+	myBin, err := storage.Read(filename)
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(myBin)
+		fmt.Println(string(myBin))
 	}
 }
