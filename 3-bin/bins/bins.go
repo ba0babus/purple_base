@@ -1,20 +1,22 @@
 package bins
 
-import "time"
+import (
+	"time"
+)
 
-type bin struct { // структура
-	id        string
-	private   bool
-	createdAt time.Time
-	name      string
+type Bin struct { // структура
+	Id        string    `json:"id"`
+	Private   bool      `json:"private"`
+	CreatedAt time.Time `json:"createdAt"`
+	Name      string    `json:"name"`
 }
 
-func NewBin(id string, private bool, name string) *bin {
-	newAcc := &bin{
-		id:        id,
-		private:   private,
-		createdAt: time.Now(),
-		name:      name,
+func NewBin(id string, private bool, name string) *Bin {
+	newAcc := &Bin{
+		Id:        id,
+		Private:   private,
+		CreatedAt: time.Now(),
+		Name:      name,
 	}
 
 	return newAcc
